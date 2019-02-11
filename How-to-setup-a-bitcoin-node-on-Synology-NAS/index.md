@@ -1,4 +1,4 @@
-#  Setting up a Bitcoin node on Synology NAS
+#  Running up a Bitcoin node on Synology NAS
 
 ## Introduction
 
