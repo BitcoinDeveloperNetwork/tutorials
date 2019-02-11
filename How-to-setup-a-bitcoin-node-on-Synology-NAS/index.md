@@ -2,23 +2,23 @@
 
 ## Introduction
 
-In this simple tutorial, we will be walking through the steps of setting up a bitcoin node on a Synology Network-attached storage (NAS) device in just a few clicks.
+In this tutorial, we will be walking through the steps of setting up a bitcoin node docker container on a Synology Network-attached storage (NAS) device in just a few simple steps.
 
 ## Background
 
-In a sense, Bitcoin is about claiming back full ownership: your keys, your money. Network-attached storage is also about claiming full ownership over your data. Considering that a typical NAS might likely have spare storage, and typically runs 24/7, they are a perfect candidate on which to run a bitcoin node.
+In a sense, Bitcoin is about claiming back full ownership: your keys, your money. Network-attached storage is also about claiming full ownership over your data. Considering that a typical NAS might likely have spare storage, and typically runs 24/7, this makes them perfect candidates on which to run a bitcoin node.
 
 ### Why Synology?
 
-Synology Inc. is a Taiwanese corporation that specialises in Network-attached storage appliances, and well I happen to own one :)
+Synology Inc. is a Taiwanese corporation that specialises in Network-attached storage appliances, and well, I happen to own one :)
 
 ## Let's get started
 
-For this tutorial, we will be deploying a bitcoin docker instance using Synology File Station. Synology File Station is the centralised file management tool for your Synology NAS. Through File Station, you can manage and search files/folders, view files of various types, share private files with external users, mount remote folders and virtual drives for access, and do much more!
+For this tutorial, we will be deploying a bitcoin docker instance using Synology's File Station. Synology File Station is the centralised file management tool for your NAS. Through File Station, you can manage and search files/folders, view files of various types, share private files with external users, mount remote folders and virtual drives for access, and do much more!
 
-To continue, you will need to access your NAS via File Station. The default HTTPS port number is 5001, so you can securely access DSM by entering the following address: https://server-hostname:5001/.
+To continue, you will need to access your NAS via File Station. The default HTTPS port number is 5001, so you can securely access DiskStation Manager (DSM) by visiting https://server-hostname:5001/, where `server-hostname` is the host or ip address of your NAS.
 
-Once we have successfully accessed the File Station interface, we can continue by creating a folder where Docker will store our bitcoin node data. To do this access File Station, then create a "docker" folder in the root of your NAS. We can create as many folders for each separate node we might want to run, e.g. "bitcoin-mainnet", "bitcoin-testnet", etc..
+Once we have successfully accessed the File Station interface, we can continue by creating a folder where we will be storing our bitcoin node data. To do this access File Station, then create a folder called "docker" in the root of your NAS. We can create as many folders for each separate node we might want to run, e.g. "bitcoin-mainnet", "bitcoin-testnet", etc..
 
 For the purpose of this tutorial, we will be creating a bitcoin node configured in testnet mode.
 
@@ -36,20 +36,20 @@ rpcuser=yourusername
 rpcpassword=yourpassword
 ```
 
-Next, we will need to install docker by accessing the `Package Center` from our NAS administration page. From here search for the `docker package`, then select the and install option.
+Next, we will need to install docker by accessing the `Package Center` from our NAS administration page. From here search for the `docker package`, then select the and `install` option.
 
 ![](images/nRDd07S.png)
 
- We are now ready to install our bitcoin docker instance by visiting opening the `Docker` package, then selecting "Registry" and searching for "bitcoind". I recommend downloading the `kylemanna` image which will simply install bitcoind on an Ubuntu instance and from its official repository - feel free to inspect the code at [Github](https://github.com/kylemanna/docker-bitcoind/blob/master/Dockerfile)
+ We are now ready to install our bitcoin docker container by opening the `Docker` package, then selecting `Registry` and searching for "bitcoind". I recommend downloading the `kylemanna` image which will simply install bitcoind on an Ubuntu instance from its official repository - feel free to inspect the code at [Github](https://github.com/kylemanna/docker-bitcoind/blob/master/Dockerfile)
 
 ![](images/wiZtXhR.png)
 
-Next, go to `Images` within Docker and select the `Launch` option of the image you just downloaded. A `Create Container` dialog is shown. You can adjust the name to something which suits your needs. We can leave the other options at default unless you have any specific preferences here. Next, select the `Advanced Settings` option.
+Next, go to `Images` within Docker and select the `Launch` option of the image you just downloaded. A `Create Container` dialog is shown. You can adjust the name to something which suits your needs e.g. bitcoind. We can leave the other options at default unless you have any specific preferences here. Next, select the `Advanced Settings` option.
 
 ![](images/gmtcZSJ.png)
 
-To restart your container after an OS update or restart, select the `Enable auto-restart`.
-From the  `Volume`, select `Add Folder`, enter your local path in `File/Folder` and `/bitcoin/.bitcoin` as `Mount path`.
+To restart your container after an OS update or reboot, select the `Enable auto-restart`.
+From the `Volume` tab, select `Add Folder`, enter your local path in `File/Folder` and `/bitcoin/.bitcoin` as `Mount path`.
 
 ![](images/xHeRvi7.png)
 
