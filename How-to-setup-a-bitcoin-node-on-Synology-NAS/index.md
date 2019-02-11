@@ -66,7 +66,8 @@ Mainnet - 8332 (P2P), 8333 (RPC)
 Testnet - 18332 (P2P), 18333 (RPC)
 Regtest - 18443 (P2P), 18444 (RPC)
 ```
-The can be overridden using the `port` and `rpcport` configuration options.
+
+These defaults can be overridden using the `port` and `rpcport` configuration options.
 
 To upgrade your instance, repeat the process starting at image download when needed.
 
