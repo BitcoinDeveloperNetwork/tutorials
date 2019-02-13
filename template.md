@@ -1,4 +1,4 @@
-# Building a Bitcoin REPL interface
+# Template
 
 ## Introduction
 
