@@ -1,8 +1,8 @@
-#  Running up a Bitcoin node on Synology NAS
+#  Running a Bitcoin node on Synology NAS
 
 ## Introduction
 
-In this tutorial, we will be walking through the steps of setting up a bitcoin node docker container on a Synology Network-attached storage (NAS) device in just a few simple steps.
+In this tutorial, we will be setting up a bitcoin node docker container on a Synology Network-attached storage (NAS) device using  just a few simple steps.
 
 ## Background
 
@@ -18,7 +18,7 @@ For this tutorial, we will be deploying a bitcoin docker instance using Synology
 
 To continue, you will need to access your NAS via File Station. The default HTTPS port number is 5001, so you can securely access DiskStation Manager (DSM) by visiting https://server-hostname:5001/, where `server-hostname` is the host or ip address of your NAS.
 
-Once we have successfully accessed the DSM interface, we can continue by creating a folder where Docker will store our bitcoin node data. To do this access File Station, then create a "docker" folder in the root of your NAS. We can then create as many subfolders for each separate node we might want to run, e.g. "bitcoin-mainnet", "bitcoin-testnet", etc..
+Once we have successfully accessed the DSM interface, we can continue by creating a folder where Docker will store our bitcoin node data. To do this, access File Station, then create a "docker" folder in the root of your NAS. We can then create as many subfolders for each separate node we might want to run, e.g. "bitcoin-mainnet", "bitcoin-testnet", etc..
 
 For the purpose of this tutorial, we will be creating a bitcoin node configured in testnet mode.
 
