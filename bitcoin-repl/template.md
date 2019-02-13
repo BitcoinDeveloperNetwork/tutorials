@@ -6,7 +6,7 @@ In this tutorial, we will be building our own Read–eval–print loop (REPL) fo
 
 ## Background
 
-The bitcoin core client currently comes bundles with a `bitcoin-cli` inteface. In our Bitcoin wire protocol 101, we demonstrated how you can communicate over the raw TCP bitcoin socket. In this tutorial we will be taking this a step further by implementing a command line tool which simplifies this process. Something I find very useful us talking to TCP services using either `telnet` or `netcat`. Testing an http server over clear test is a simple process.
+The bitcoin core client currently comes bundles with a `bitcoin-cli` inteface. In our Bitcoin wire protocol 101, we demonstrated how you can communicate over the raw TCP bitcoin socket. In this tutorial we will be taking this a step further by implementing a command line tool which simplifies this process. Something I find very useful is talking to TCP services using either `telnet` or `netcat`. Testing an http server over clear test is a simple process.
 
 Here is a simple command for connecting to an http server over port 80 and issuing a `HEAD` request.
 
