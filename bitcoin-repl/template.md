@@ -19,6 +19,17 @@ Received :
 /Satoshi:0.12.1/
 ```
 
+Or
+
+```console
+gr0kchain $ cli.js
+bitcoin> connect localhost 18444
+Connecting to  localhost 18444
+bitcoin> version
+/Satoshi:0.12.1/
+bitcoin> 
+```
+
 
 ## Conclusion
 
