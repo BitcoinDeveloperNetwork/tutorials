@@ -6,10 +6,35 @@ In this tutorial, we will be building our own Read–eval–print loop (REPL) fo
 
 ## Background
 
-The bitcoin core client currently comes bundles with a `bitcoin-cli` inteface. In our Bitcoin wire protocol 101, we demonstrated how you can communicate over the raw TCP bitcoin socket. In this tutorial we will be taking this a step further by implementing a command line tool which simplifies this process. Something I find very useful us talking to TCP services using either `telnet` or `netcat`. Testing an https server over clear test is a simple process.
+The bitcoin core client currently comes bundles with a `bitcoin-cli` inteface. In our Bitcoin wire protocol 101, we demonstrated how you can communicate over the raw TCP bitcoin socket. In this tutorial we will be taking this a step further by implementing a command line tool which simplifies this process. Something I find very useful us talking to TCP services using either `telnet` or `netcat`. Testing an http server over clear test is a simple process.
+
+Here is a simple command for connecting to an http server over port 80 and issuing a `HEAD` request.
 
 ```console
-openssl s_client -connect www.google.com:443
+gr0kchain $ telnet bitcoindev.network 80
+Trying 188.166.140.217...
+Connected to bitcoindev.network.
+Escape character is '^]'.
+HEAD / HTTP/1.0
+
+HTTP/1.1 200 OK
+Server: nginx/1.10.3 (Ubuntu)
+Date: Wed, 13 Feb 2019 21:05:32 GMT
+Content-Type: text/html
+Content-Length: 612
+Last-Modified: Thu, 17 Nov 2016 06:55:25 GMT
+Connection: close
+Vary: Accept-Encoding
+ETag: "582d545d-264"
+Accept-Ranges: bytes
+
+Connection closed by foreign host.
+```
+
+Sometimes, we'd like to do this over https, so here is an example of connecting to google over tls.
+
+```console
+gr0kchain $ openssl s_client -connect www.google.com:443
 CONNECTED(00000005)
 depth=2 OU = GlobalSign Root CA - R2, O = GlobalSign, CN = GlobalSign
 verify return:1
