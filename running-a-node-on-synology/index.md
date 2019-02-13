@@ -16,7 +16,7 @@ Synology Inc. is a Taiwanese corporation that specialises in Network-attached st
 
 For this tutorial, we will be deploying a bitcoin docker instance using Synology Disk Station Manager (DSM), the linux based operating system running your Synology NAS. Through DSM, you can manage and search files/folders, view files of various types, share private files with external users, mount remote folders and virtual drives for access, and do much more!
 
-To continue, you will need to access your NAS via File Station. The default HTTPS port number is 5001, so you can securely access DiskStation Manager (DSM) by visiting https://server-hostname:5001/, where `server-hostname` is the host or ip address of your NAS.
+To continue, you will need to access your NAS via a web browser. The default HTTPS port number is 5001, so you can securely access DiskStation Manager (DSM) by visiting https://server-hostname:5001/, where `server-hostname` is the host or ip address of your NAS.
 
 Once we have successfully accessed the DSM interface, we can continue by creating a folder where Docker will store our bitcoin node data. To do this, access File Station, then create a "docker" folder in the root of your NAS. We can then create as many subfolders for each separate node we might want to run, e.g. "bitcoin-mainnet", "bitcoin-testnet", etc..
 
