@@ -10,27 +10,15 @@ In a sense, Bitcoin is about claiming back full ownership: your keys, your money
 
 ### Why Synology?
 
-<<<<<<< HEAD
-Synology Inc. is a Taiwanese corporation that specialises in Network-attached storage appliances, and well, I happen to own one :)
-
-## Let's get started
-
-For this tutorial, we will be deploying a bitcoin docker instance using Synology's File Station. Synology File Station is the centralised file management tool for your NAS. Through File Station, you can manage and search files/folders, view files of various types, share private files with external users, mount remote folders and virtual drives for access, and do much more!
-=======
 Synology Inc. is a Taiwanese corporation that specialises in Network-attached storage appliances, working with a linux based distribution out of the box, and well I happen to own one :)
 
 ## Let's get started
 
 For this tutorial, we will be deploying a bitcoin docker instance using Synology Disk Station Manager (DSM), the linux based operating system running your Synology NAS. Through DSM, you can manage and search files/folders, view files of various types, share private files with external users, mount remote folders and virtual drives for access, and do much more!
->>>>>>> master
 
 To continue, you will need to access your NAS via File Station. The default HTTPS port number is 5001, so you can securely access DiskStation Manager (DSM) by visiting https://server-hostname:5001/, where `server-hostname` is the host or ip address of your NAS.
 
-<<<<<<< HEAD
-Once we have successfully accessed the File Station interface, we can continue by creating a folder where we will be storing our bitcoin node data. To do this access File Station, then create a folder called "docker" in the root of your NAS. We can create as many folders for each separate node we might want to run, e.g. "bitcoin-mainnet", "bitcoin-testnet", etc..
-=======
 Once we have successfully accessed the DSM interface, we can continue by creating a folder where Docker will store our bitcoin node data. To do this access File Station, then create a "docker" folder in the root of your NAS. We can then create as many subfolders for each separate node we might want to run, e.g. "bitcoin-mainnet", "bitcoin-testnet", etc..
->>>>>>> master
 
 For the purpose of this tutorial, we will be creating a bitcoin node configured in testnet mode.
 
@@ -48,19 +36,11 @@ rpcuser=yourusername      # to update at your will
 rpcpassword=yourpassword  # to update at your will
 ```
 
-<<<<<<< HEAD
-Next, we will need to install docker by accessing the `Package Center` from our NAS administration page. From here search for the `docker package`, then select the and `install` option.
-
-![](images/nRDd07S.png)
-
- We are now ready to install our bitcoin docker container by opening the `Docker` package, then selecting `Registry` and searching for "bitcoind". I recommend downloading the `kylemanna` image which will simply install bitcoind on an Ubuntu instance from its official repository - feel free to inspect the code at [Github](https://github.com/kylemanna/docker-bitcoind/blob/master/Dockerfile)
-=======
 Next, we will need to install docker by accessing the `Package Center` from our NAS administration page. From here search for the "docker" package, then select the install option.
 
 ![](images/nRDd07S.png)
 
  We are now ready to install our bitcoin docker instance by opening the `Docker` package, then selecting `Registry` and searching for "bitcoind". I recommend downloading the `kylemanna` image which will simply install bitcoind on an Ubuntu instance and from its official repository - feel free to inspect the code at [Github](https://github.com/kylemanna/docker-bitcoind/blob/master/Dockerfile)
->>>>>>> master
 
 ![](images/wiZtXhR.png)
 
@@ -69,11 +49,7 @@ Next, go to `Images` within Docker and select the `Launch` option of the image y
 ![](images/gmtcZSK.png)
 
 To restart your container after an OS update or reboot, select the `Enable auto-restart`.
-<<<<<<< HEAD
 From the `Volume` tab, select `Add Folder`, enter your local path in `File/Folder` and `/bitcoin/.bitcoin` as `Mount path`.
-=======
-From the  `Volume`, select `Add Folder`, enter your local path in `File/Folder` and `/bitcoin/.bitcoin` as `Mount path`.
->>>>>>> master
 
 ![](images/xHeRvi9.png)
 
