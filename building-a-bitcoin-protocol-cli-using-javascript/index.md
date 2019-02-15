@@ -1,8 +1,6 @@
-#  Building a Bitcoin CLI
-
 ## Introduction
 
-In this tutorial, we will be building our own command line interface for the bitcoin wire protocol which can be used for simple debugging or informational purposes.
+In this tutorial, we will be building our very own command line interface for the bitcoin wire protocol which can be used for simple debugging or educational purposes.
 
 ## Background
 
@@ -116,15 +114,14 @@ Content-Length: 182
 Connection: close
 
 read:errno=0
-Judas:tutorials h4v0k$
 ```
 
-Unfortunately, none of these tools work out of the box due to the bitcoin wire protocol being binary and not clear text. If you know of one, please feel free to leave it in the comments. Either way, we will be writing out own so we can learn more about how this works in detail.
+Unfortunately, none of these tools work out of the box due to the bitcoin wire protocol being binary and not clear text. If you know of one, please feel free to leave it in the comments. Either way, we will be writing our own so we can learn more about how this works in detail.
 
 
 ## Before we begin
 
-Before we get started, let's first have a look at what we could expect from having a tool which helps us test a connection to a remote node and printing out its version number to screen.
+So, let's firstly have a look at what we could expect from having a tool which helps us test a connection to a remote node and printing out its version number to screen.
 
 ```console
 gr0kchain $ bitcoinwire-cli localhost 18444
@@ -138,7 +135,7 @@ Think of it as the telnet for bitcoin!
 
 ## Getting started
 
-For this tutorial we will be using nodejs as our preferred language, so an existing nodejs environment would be required.
+For this tutorial we will be using javascript as our preferred language, so an existing nodejs environment would be required.
 
 We'll start off by creating our project and initialising it as a node package.
 
@@ -152,7 +149,7 @@ Follow the prompts required for setting up your package.
 
 ### The connection
 
-Our first challenge will be to establish and test the connectivity to a bitcoin node. For this we will make use of the `net` package provided by nodejs. Open up your favourite text editor, and create an `index.js` file containing the follow:
+Our first challenge will be to establish and test the connectivity to a bitcoin node. For this we will make use of the [net](https://nodejs.org/api/net.html) package provided by nodejs. Open up your favourite text editor, and create an `index.js` file containing the follow:
 
 ```console
 var net = require('net');
@@ -179,7 +176,7 @@ client.on('close', function() {
 });
 ```
 
-You can run this against any TCP based service to see if we are able to connect. We can test this against an TCP based socket to see if we can connect by passing a host and port number to our script.
+We can test this against any TCP based socket server to see if we can connect by simply passing `host` and `port number` arguments to our script.
 
 ```console
 gr0kchain $ node ./index.js bitcoindev.network 80
@@ -217,7 +214,7 @@ There was a problem trying to connect to 188.166.140.217 81
 Connection closed
 ```
 
-> Note: There a are many useful packages which help in creating complex cli tools including `prompt`, `commander` and `yargs`. We have omitted these for the sake of simplicity, but feel free to explore these yourself.
+> Note: There a are many useful packages which help in creating complex cli tools including [prompt](https://www.npmjs.com/package/prompt), [commander](https://www.npmjs.com/package/commander) and [yargs](https://www.npmjs.com/package/yargs). We have omitted these for the sake of simplicity, but feel free to explore these yourself.
 
 ### The conversation
 
@@ -229,9 +226,10 @@ As previously demonstrated in that tutorial, here is a snippet from our latest `
 # address                                        good  lastSuccess    %(2h)   %(8h)   %(1d)   %(7d)  %(30d)  blocks      svcs  version
 47.75.208.26:8333                                   1   1550125076  100.00% 100.00% 100.00% 100.00%  99.30%  562974  0000040d  70015 "/Satoshi:0.13.2/"
 213.133.103.3:9199                                  0   1550125035  100.00% 100.00% 100.00% 100.00%  99.30%  562974  0000000d  70015 "/Satoshi:0.13.2/"
-172.99.120.113:8333                                 1   1550125063  100.00% 100.00% 100.00% 100.00%  99.30%  562974  0000040d  70015 "/Satoshi:0.17.0.1/"```
+172.99.120.113:8333                                 1   1550125063  100.00% 100.00% 100.00% 100.00%  99.30%  562974  0000040d  70015 "/Satoshi:0.17.0.1/"
+```
 
-It is not recommended that you execute commands against these nodes unless it is either your own. The protocol will however ban you if you start flooding it with spam or invalid messages. For the purposes of our tutorial, we will be poking at a local `regtest` instance.
+It is not recommended that you execute commands against these nodes unless it is either your own, or you have informed the owner of that node that you will be conducting these tests. The protocol will however ban you if you start flooding it with spam or invalid messages. For the purposes of our tutorial, we will be poking at a local `regtest` instance.
 
 > Note: We have provided a simple docker container configured in regtest mode that you can install for testing purposes.
 >
@@ -295,8 +293,8 @@ Nice! If we receive some response as demonstrated in the above example, we shoul
 > Note: You can always look at the debug.log file of your node to see if it is receiving incoming requests. Ensure that you have updated your `bitcoin.conf` file to set `debug=1`.
 > ```console
 > 2019-02-14 12:18:16 Added connection to 127.0.0.1:63008 peer=12
-2019-02-14 12:18:16 connection from 127.0.0.1:63008 accepted
-2019-02-14 12:18:16 received: version (100 bytes) peer=12
+> 2019-02-14 12:18:16 connection from 127.0.0.1:63008 accepted
+> 2019-02-14 12:18:16 received: version (100 bytes) peer=12
 > ```
 
 Next up, we'll need to sanitise the response received from the targeted node. You might notice some strings including `version`, `/Satoshi:0.12.1/` or even `verack`. This is because these are ascii bytes wrapped in our general bitcoin messaging protocol data.
@@ -447,7 +445,7 @@ Here we can see the structure of our message packet. Here is a quick reference a
 <td> Whether the remote peer should announce relayed transactions or not, see <a rel="nofollow" class="external text" href="https://github.com/bitcoin/bips/blob/master/bip-0037.mediawiki">BIP 0037</a>
 </td></tr></tbody></table>
 
-So let's include some code which will help us decode this. We can define json objects for the schemas of each both our `message` and `payload` data structures.
+So let's include some code which will help us decode this. We can define json objects for the schemas of both our `message` and `payload` data structures.
 
 > Note: Considering something like protobuf might be more convenient here, we are however doing our own schemas for the sake of simplicity.
 
@@ -471,7 +469,7 @@ var version = {
 }
 ```
 
-We also need a function which can decode our payload based on the our schemas.
+We also need a function which can decode our payload based on our schemas.
 
 ```console
 function decodePacket(payload, schema) {
@@ -488,7 +486,7 @@ function decodePacket(payload, schema) {
 }
 ```
 
-We can now utlise these in the data handler when we receive incoming messages from the remote node by updating our `data` event handler as follows.
+We can now utilise these in the data handler when we receive incoming messages from the remote node by updating our `data` event handler as follows.
 
 ```console
 client.on('data', function(data) {
@@ -511,8 +509,6 @@ Finally, we should have a file that looks similar to this.
 var net = require('net');
 
 var client = new net.Socket();
-
-var protobuf = require("protobufjs");
 
 var host = process.argv[2];
 var port = process.argv[3];
@@ -594,9 +590,9 @@ Amazing work!
 
 ## Conclusion
 
-In this tutorial, we walked through the various step of building our very own bitcoin command line interface! You might wish to extend this with some of the other message types, but this should get you started!
+In this tutorial, we walked through the various steps for building our very own bitcoin command line interface! You might wish to extend this with some of the other message types, but this should get you started!
 
 ## Reference
 
+[Bitcoin protocol documentation](https://en.bitcoin.it/wiki/Protocol_documentation)
 [GitHub](https://github.com/BitcoinDeveloperNetwork/bitcoin-repl)
-
