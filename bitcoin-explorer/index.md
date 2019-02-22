@@ -92,8 +92,8 @@ wait chuckle orchard digital section seminar loud dust dog very exclude lift res
 
 ```console
 gr0kchain@bitcoindev $ bx qrcode -p 131zKT2n1FN4Z6JdDAWMg3w8ehYjoRByTB | imgcat
-![](131zKT2n1FN4Z6JdDAWMg3w8ehYjoRByTB.png)
 ```
+![](assets/131zKT2n1FN4Z6JdDAWMg3w8ehYjoRByTB.png)
 
 
 
