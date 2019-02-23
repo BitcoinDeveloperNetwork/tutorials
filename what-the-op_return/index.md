@@ -1,12 +1,21 @@
-# Template
+# What the OP_RETURN?!
 
 ## Introduction
 
-Provide an introduction to the purpose or subject being covered in this tutorial
+OP_RETURN is a script opcode used to mark a transaction output as invalid. Since any outputs with OP_RETURN are provably unspendable, OP_RETURN outputs can be used to burn bitcoins.
+
 
 ## Background
 
-Provide some background as to what problem will be addressed or what motivated writing this tutorial. 
+Many members of the Bitcoin community believe that use of OP_RETURN is irresponsible in part because Bitcoin was intended to provide a record for financial transactions, not a record for arbitrary data. Additionally, it is trivially obvious that the demand for external, massively-replicated data store is essentially infinite. Despite this, OP_RETURN has the advantage of not creating bogus UTXO entries, compared to some other ways of storing data in the blockchain.
+
+From the Bitcoin Core [release 0.9.0 notes](https://bitcoin.org/bin/insecure/bitcoin-core-0.9.0/README.txt):
+
+
+> This change is not an endorsement of storing data in the blockchain. The OP_RETURN change creates a provably-prunable output, to avoid data storage schemes – some of which were already deployed – that were storing arbitrary data such as images as forever-unspendable TX outputs, bloating bitcoin's UTXO database.
+>
+> Storing arbitrary data in the blockchain is still a bad idea; it is less costly and far more efficient to store non-currency data elsewhere.
+
 
 ## Let's get started
 
