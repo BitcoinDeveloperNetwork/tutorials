@@ -1,0 +1,46 @@
+<template id="bitcoin-address">
+    <div>Address<br />
+      <canvas id="canvas"></canvas>
+      <div>
+        <slot name="address">Address goes here</slot>
+      </div>
+    </div>
+</template>
+<script src="qrcode.min.js">
+</script>
+<script src="axios.min.js">
+</script>
+<script>
+  (function() {
+    // Update our bitcoin-address element with an address from the server
+
+    class BitcoinAddress extends HTMLElement {
+      constructor() {
+        super();
+        const template = document.querySelector('link[rel="import"]').import
+        const templateContent = template.getElementById("bitcoin-address").content
+        const shadowRoot = this.attachShadow({ mode: "open" }).appendChild(
+          templateContent.cloneNode(true)
+        )
+      }
+
+      connectedCallback() {
+        axios.get('/address').then((resp) => {
+          if ( /address\/bitcoin/.test(resp.headers['content-type'])) {
+            document.getElementsByTagName("bitcoin-address")[0].innerHTML = "<span slot='address'>" + resp.data.result + "</slot>";
+            var canvas = document.getElementsByTagName('bitcoin-address')[0].shadowRoot.childNodes[1].childNodes[3]
+            var elements = document.getElementsByTagName('bitcoin-address')
+            QRCode.toCanvas(canvas, "bitcoin:" + resp.data.result, function (error) {
+              if (error) console.error(error)
+                console.log('success!');
+            })
+          }
+        })
+
+
+      }
+    }
+
+    customElements.define("bitcoin-address", BitcoinAddress);
+  })()
+</script>
