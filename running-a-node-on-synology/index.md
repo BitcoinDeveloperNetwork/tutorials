@@ -62,9 +62,9 @@ Finally, select `Apply` to verify your settings, followed by `Next`, and `Apply`
 Don't forget to open ports required for the Remote Procedure Call (RPC, default is port 18444) and Peer-to-Peer (P2P) interfaces for external access if required. The following defaults are used based on the network you've configured in your `bitcoin.conf` file.
 
 ```console
-Mainnet - 8332 (P2P), 8333 (RPC)
-Testnet - 18332 (P2P), 18333 (RPC)
-Regtest - 18443 (P2P), 18444 (RPC)
+Mainnet - 8333 (P2P), 8332 (RPC)
+Testnet - 18333 (P2P), 18332 (RPC)
+Regtest - 18444 (P2P), 18443 (RPC)
 ```
 
 These defaults can be overridden using the `port` and `rpcport` configuration options.
