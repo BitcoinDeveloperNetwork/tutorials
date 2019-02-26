@@ -1,8 +1,7 @@
 const express = require('express');
 const app = express();
 const RpcClient = require('bitcoind-rpc');
-//
-var path = require('path');
+const path = require('path');
 app.use('/static', express.static(path.join(__dirname, 'static')))
 
 var config = {

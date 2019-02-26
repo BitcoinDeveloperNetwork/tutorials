@@ -26,7 +26,7 @@
 
       connectedCallback() {
         axios.get('/address').then((resp) => {
-          if ( /address\/bitcoin/.test(resp.headers['content-type'])) {
+          if ( /bitcoin\/address/.test(resp.headers['content-type'])) {
             document.getElementsByTagName("bitcoin-address")[0].innerHTML = "<span slot='address'>" + resp.data.result + "</slot>";
             var canvas = document.getElementsByTagName('bitcoin-address')[0].shadowRoot.childNodes[1].childNodes[3]
             var elements = document.getElementsByTagName('bitcoin-address')

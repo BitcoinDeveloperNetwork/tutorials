@@ -1,27 +1,25 @@
-# Money as a content type
-
 ## Introduction
 
-In this tutorial, we will be exploring some ideas around thinking of money as a content type. Everyone appears to have hijacked Tim Berners-Lee, father of the webs take on what [Web 3.0](https://en.wikipedia.org/wiki/Semantic_Web#Web_3.0) really meant, but perhaps, web 3.0 as he puts it, was just the semantic web.
+In this tutorial, we will be exploring some ideas around thinking of money as a native content type for the world wide web. Everyone appears to have dismissed [Sir Tim Berners-Lee](https://en.wikipedia.org/wiki/Tim_Berners-Lee) 's proposed ideas of [Web 3.0](https://en.wikipedia.org/wiki/Semantic_Web#Web_3.0) with the idea of a `decetralised web`. Perhaps however, web 3.0 as he puts it, is just the [semantic web](https://en.wikipedia.org/wiki/Semantic_Web), which was decentralised at the internet layer anyway.
 
-That being said, we hardly incremented this pseudo term every time a new content type was added to the web specifications. Can you imagine if we had done that for text, images, sound or even video, so why start now? After all, Bitcoin has given us something more significant, something which complements the web, something that is native to it, an additional content type called money!
-
+That being said, we hardly incremented this pseudo term every time a new content type is added to the [web specifications](https://www.w3.org/standards/). Can you imagine if we had done that for text, images, sound or even video, so why start now? After all, Bitcoin has given us something more significant, something which complements the web, something that is native to it, an additional content type called *money*! We can do  amazing stuff with content today, from downloading and uploading, to streaming and archiving, so let's see what we can do when adding a hint of money to the world wide web.
 
 ## Background
 
-This tutorial is inspired by a talk given on [Money As A Content Type](https://www.youtube.com/watch?v=6vFgBGdmDgs) by [Andreas Antonopolous](https://twitter.com/aantonop). Since watching this talk the first time, I've been exploring various ways in which this level of thinking could be applied to the web we know and love today.
+This tutorial is inspired by a talk given on [Money As A Content Type](https://www.youtube.com/watch?v=6vFgBGdmDgs) by [Andreas Antonopolous](https://twitter.com/aantonop). Since watching his talk, I've been exploring various ways in which this level of thinking could be applied to the web we know and love today.
 
-![](assets/tx.png)
+![](https://raw.githubusercontent.com/BitcoinDeveloperNetwork/tutorials/bitcoin_content_types/money_as_a_content_type/assets/tx.png)
 
 And yes, the image above is an example of a bitcoin transaction which has been encoded using [steganography](https://en.wikipedia.org/wiki/Steganography).
 
-> **Note** This is not the most efficient way of encoding transaction data into a file. But you can imagine using this technique as an example for any other kind of data we have
+> **Note**
+> This is not the most efficient way of encoding transaction data into a file. But you can imagine using this technique as an example for any other kind of data we have
 
 You can confirm this for yourself by uploading it to the following [site](https://www.peter-eigenschink.at/projects/steganographyjs/showcase) and selecting the `Read` option.
 
-![](assets/steganography_preview.png)
+![](https://raw.githubusercontent.com/BitcoinDeveloperNetwork/tutorials/bitcoin_content_types/money_as_a_content_type/assets/steganography_preview.png)
 
-And decoding it on the console using the bitcoin explorer (`bx`) command. Please checkout our [Primer for libbitcoin](/a-primer-for-libbitcoin) for more information. 
+And decoding it on the console using the bitcoin explorer (`bx`) command. Please checkout our [Primer for libbitcoin](/a-primer-for-libbitcoin) for more information.
 
 ```console
 gr0kchain@bitcoindev $ echo 0100000001c997a5e56e104102fa209c6a852dd90660a20b2d9c352423edce25857fcd3704000000004847304402204e45e16932b8af514961a1d3a1a25fdf3f4f7732e9d624c6c61548ab5fb8cd410220181522ec8eca07de4860a4acdd12909d831cc56cbbac4622082221a8768d1d0901ffffffff0200ca9a3b00000000434104ae1a62fe09c5f51b13905f07f06b99a2f7159b2225f374cd378d71302fa28414e7aab37397f554a7df5f142c21c1b7303b8a0626f1baded5c72a704f7e6cd84cac00286bee0000000043410411db93e1dcdb8a016b49840f8c53bc1eb68a382e97b1482ecad7b148a6909a5cb2e0eaddfb84ccf9744464f82e160bfa9b8b64f9d4c03f999b8643f656b412a3ac00000000 | bx tx-decode
@@ -61,9 +59,12 @@ transaction
 }
 ```
 
-## The Web vs the Internet
+> **Fun fact**
+> This is the first transaction to have ever taken place on the bitcoin network between [Hal Finney](https://en.wikipedia.org/wiki/Hal_Finney_(computer_scientist)) and Satoshi Nakamoto. You can check it out on the block chain here [f4184fc596403b9d638783cf57adfe4c75c605f6356fbc91338530e9831e9e16](https://blockstream.info/tx/f4184fc596403b9d638783cf57adfe4c75c605f6356fbc91338530e9831e9e16).
 
-Andreas is also well known for having referred to bitcoin as the [internet of value](https://www.youtube.com/watch?v=rc744Z9IjhY), where he refers to `Money` as and application.
+## The Web vs The Internet
+
+Andreas is also well known for having referred to Bitcoin as the [internet of value](https://www.youtube.com/watch?v=rc744Z9IjhY), with `Money` as the first application.
 
 Before we dive into things, let's first review the definitions of what we mean when referring to the internet vs the world wide web.
 
@@ -77,16 +78,38 @@ Before we dive into things, let's first review the definitions of what we mean w
 > noun
 > an information system on the Internet which allows documents to be connected to other documents by hypertext links, enabling the user to search for information by moving from one document to another.
 
+For the purpose of this tutorial, we will be thinking of **Bitcoin** the network as our internet, and **bitcoin** the unit as our content for the word wide web.
+
+## Before we get started
+
+You will need access to a bitcoin node. We suggest executing against a node configured in `regtest` mode so that we can have the freedom of playing with various scenarios without loosing real money. You can however execute these against either the `testnet` or `mainnet` configurations.
+
+> **Note:**
+> If you don't currently have access to a bitcoin development environment set up, dont' worry, we have your back! We've setup a web based mechanism which provisions your very own private session that includes these tools and comes preconfigured with a bitcoin node in `regtest` mode. https://bitcoindev.network/bitcoin-cli-sandbox/
+> Alternatively, we have also provided a simple docker container configured in `regtest` mode that you can install for testing purposes.
+> ```console
+> gr0kchain:~ $ docker volume create --name=bitcoind-data
+> gr0kchain:~ $ docker run -v bitcoind-data:/bitcoin --name=bitcoind-node -d \
+>      -p 18444:18444 \
+>      -p 127.0.0.1:18332:18332 \
+>      bitcoindevelopernetwork/bitcoind-regtest
+> ```
+
 
 ## Let's get started
 
 So let's explore what it means to think of money as a content type on the web.
 
-Some primitives we have in bitcoin include Transactions, Blocks and Addresses, which might suggest that the following extensions of the HTTP protocol be considered.
+Some primitives we have in bitcoin include Transactions, Blocks and Addresses, which might suggest that the following additional content types for the HTTP protocol be considered.
 
-`Content-Type: transaction/bitcoin`
-`Content-Type: block/bitcoin`
-`Content-Type: address/bitcoin`
+`Content-Type: bitcoin/transaction`
+`Content-Type: bitcoin/block`
+`Content-Type: bitcoin/address`
+
+> **Edit**
+> Thanks for a recommendation from [macterra](github.com/macterra) to swap our MIME type from primitive/category to category/primitive. So instead we might consider `bitcoin/address`, `bitcoin/transaction` and `bitcoin/block`.
+
+We can also implement actions for GET or POST on addresses, which might relate to getting a new address, or posting a transaction to one.
 
 So let's see how this might work.
 
@@ -131,11 +154,11 @@ gr0kchain@bitcoindev $ curl http://localhost:8080
 Hello Bitcoin!
 ```
 
-![](assets/success.jpg)
+![](https://raw.githubusercontent.com/BitcoinDeveloperNetwork/tutorials/bitcoin_content_types/money_as_a_content_type/assets/success.jpg)
 
 ### Adding our custom content types
 
-The HTTP 1.1 specification includes information on our common methods including `GET` and `POST`, and the less common ones, `PUT`, `DELETE`, `CONNECTION`, `OPTION` and `TRACE`. It also includes information on the HTTP [Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5) request and response headers.
+The HTTP 1.1 specification includes information on our common methods for `GET` and `POST`, and the less common ones, `PUT`, `DELETE`, `CONNECTION`, `OPTION` and `TRACE`. It also includes information on the HTTP [Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5) request and response headers.
 
 > The "Content-Type" header field indicates the media type of the associated representation: either the representation enclosed in the message payload or the selected representation, as determined by the message semantics.  The indicated media type defines both the data format and how that data is intended to be processed by a recipient, within the scope of the received message semantics, after any content codings indicated by Content-Encoding are decoded.
 
@@ -163,7 +186,7 @@ Let's look at adding an address `content-type` to our server. To keep things sim
   var rpc = new RpcClient(config);
   ```
 
-  > **Note** There a are many ways in which you could achieve integration with bitcoin, some interesting libraries include [bitcoinjs-lib](), [bcoin](), [bitcore]() to name just a few.
+  > **Note** There a are many ways in which you could achieve integration with bitcoin, some interesting libraries include [bitcoinjs-lib](https://github.com/bitcoinjs/bitcoinjs-lib), [bcoin](http://bcoin.io), [bitcore](https://bitcore.io/) to name just a few.
 
 3. Add an HTTP end-point for working with addresses.
 
@@ -180,9 +203,19 @@ Let's look at adding an address `content-type` to our server. To keep things sim
   {"result":"mx1R8iZjekd2EmqUktPUpbAGeED1mf78R1","error":null,"id":45307}
   ```
 
-  Awesome stuff bitcoiner, now let's convert this into a content type.
 
-5. Update your `address` end-point to include the `bitcoin/address` content type response header.
+
+5. Awesome stuff bitcoiner, now let's convert this into a content type. Update your `address` end-point to include the `bitcoin/address` content type response header.
+
+  ```console
+  app.get('/address', (req, res) => {
+    res.set('Content-Type', 'bitcoin/address');
+    rpc.getNewAddress(function(err, resp) {
+      res.send(resp);
+    })
+  });
+  ```
+6. Test to see if this works.
 
   ```console
   gr0kchain@bitcoindev $ curl -v http://127.0.0.1:8080/address
@@ -196,7 +229,7 @@ Let's look at adding an address `content-type` to our server. To keep things sim
   >
   < HTTP/1.1 200 OK
   < X-Powered-By: Express
-  < Content-Type: address/bitcoin; charset=utf-8
+  < Content-Type: bitcoin/address; charset=utf-8
   < Content-Length: 71
   < ETag: W/"47-ItepdBa7ZtjUhF+M8YYAfYua7dM"
   < Date: Mon, 25 Feb 2019 09:48:40 GMT
@@ -224,7 +257,7 @@ Now that we've setup a bitcoin content type for `address`, let's see how we can 
 2. Install [axios](https://www.npmjs.com/package/axios) for implementing http requests from the browser.
 ```
 gr0kchain@bitcoindev $ npm install axios
-gr0kchain@bitcoindev $ cp ./node_modules/qrcode/build/qrcode.min.js ./static/
+gr0kchain@bitcoindev $ cp ./node_modules/axios/dist/axios.min.js ./static/
 ```
 
 3. Next, we'll create a Web component for our address element at `static/address.html`
@@ -241,7 +274,7 @@ gr0kchain@bitcoindev $ cp ./node_modules/qrcode/build/qrcode.min.js ./static/
   (function() {
     // Update our bitcoin-address element with an address from the server
     axios.get('/address').then((resp) => {
-      if ( /address\/bitcoin/.test(resp.headers['content-type'])) {
+      if ( /bitcoin\/address/.test(resp.headers['content-type'])) {
         document.getElementsByTagName("bitcoin-address")[0].innerHTML = "<span slot='address'>" + resp.data.result + "</slot>";
       }
     })
@@ -287,14 +320,14 @@ app.use('/static', express.static(path.join(__dirname, 'static')))
 
 6. We can test to see if this works by opening the page in our browser.
 
-  ![](assets/address_component.png)
+  ![](https://raw.githubusercontent.com/BitcoinDeveloperNetwork/tutorials/bitcoin_content_types/money_as_a_content_type/assets/address_component.png)
 
   > **Note** Due to the RPC call to our server, each refresh should show a new address.
 
 
 ### Adding some features
 
-So we've been able to print out the address creating our very own custom bitcoin web components. How about we customise this to render a QR Code for us.
+So we've been able to print out the address creating our very own custom bitcoin web component. How about we customise this to render a QR Code for us.
 
 1. Update our `address.html` template to include a `canvas` element.
 
@@ -365,10 +398,12 @@ gr0kchain@bitcoindev $ cp ./node_modules/qrcode/build/qrcode.min.js ./static/
     })()
   ```
 5. Test to see if our QR code renders by refreshing out application in the browser.
-  ![](assets/qr_code.png)
+  ![](https://raw.githubusercontent.com/BitcoinDeveloperNetwork/tutorials/bitcoin_content_types/money_as_a_content_type/assets/qr_code.png)
 
 
 > Imagine the power of combining this by extending your browser with a browser extension.
+
+You can download a copy of the final source code [here](https://github.com/BitcoinDeveloperNetwork/tutorials/tree/master/money_as_a_content_type/code).
 
 We can extend our application with additional content types for handling primitives including `transactions` and `blocks`. Why not try and implement these yourself.
 
@@ -380,4 +415,7 @@ In this tutorial, we looked at how treating Bitcoin as a new content type within
 
 ## Reference
 
+[W3C Web Components](https://www.w3.org/standards/techs/components#w3c_all)
+[RFC7231](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
 [Steganography.js](https://www.peter-eigenschink.at/projects/steganographyjs/)
+[Code for this tutorial](https://github.com/BitcoinDeveloperNetwork/tutorials/tree/master/money_as_a_content_type/code)
