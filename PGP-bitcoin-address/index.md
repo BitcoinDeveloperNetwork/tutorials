@@ -8,13 +8,13 @@ We will demonstrate how to derive a bitcoin address from a PGP public key, creat
 
 ## Background
 
-Following the [addition](https://git.gnupg.org/cgi-bin/gitweb.cgi?p=gnupg.git;a=commit;h=c5e41f539b9a21cbad10c7dae95572a4445d31c3) of secp256k1 elliptic curve support to GnuPGP in early 2014, and the recent merge of [BIP174](https://github.com/bitcoin/bips/blob/master/bip-0174.mediawiki) for enabling partially signed bitcoin transaction (PSBT), it possible to use OpenPGP cards to store bitcoin private key in the tamper-resistant and PIN-protected device.
+Following the [addition](https://git.gnupg.org/cgi-bin/gitweb.cgi?p=gnupg.git;a=commit;h=c5e41f539b9a21cbad10c7dae95572a4445d31c3) of secp256k1 elliptic curve support to GnuPGP in early 2014, and the recent merge of [BIP174](https://github.com/bitcoin/bips/blob/master/bip-0174.mediawiki) for enabling partially signed bitcoin transaction (PSBT), it appears possible to use OpenPGP cards to store bitcoin private key in the tamper-resistant and PIN-protected device.
 
 We will be using GnuPG v2.2.12 and Julia v1.1.
 
-You will also need to add the `bin2packet` and `bitcoin` modules as follows.
+You will also need to add the `PGPacket` and `Bitcoin` package as follows.
 
-In Julia, invoke the package menu by typing `]` then add the pgppackget.jl.git repository.
+Since `PGPacket` has not been released as an official package yet, we will need to add its repository manually. In Julia, invoke the package menu by typing `]` then add the pgppackget.jl.git repository, finally hit `backspace` to get back to the julia command line.
 
 ```julia
 (v1.1) pkg> add https://gitlab.com/braneproject/pgpacket.jl.git
@@ -24,19 +24,16 @@ Next, we will prepare our environment by importing the libraries required for th
 
 ```
 julia> using Pkg
-julia> Pkg.add("Bitcoin")
 julia> Pkg.add("PGPacket")
-julia> using ECC
-julia> using PGPacket
-julia> using Bitcoin
-julia> bin2packet = PGPacket.bin2packet
+julia> Pkg.add("Bitcoin")
+julia> using PGPacket, Bitcoin, Base58, ECC
 ```
 
 ## Let's get started
 
 ### Generate a key pair
 
-We first have to create a key pair with GnuPG, using ECC and secp256k1 curve. We will simply run gpg with the `--full-generate-key` command and `--expert` option. Once we've invoked the GnuPG interactive menu, select options `10`, `9`, `0`, `y`, and finalise with user detail at your will.
+We first have to create a key pair with GnuPG, using ECC and secp256k1 curve. We will simply run gpg with the `--full-generate-key` command and `--expert` option. Once we've invoked the GnuPG interactive menu, select options `10`, `9`, `0`, `y`, and finalise with user details at your will. To ease the experiment, do not enter setup passphrase for this key, it will allow us to export an unencrypted private key.
 
 ```shell
 $ gpg --expert --full-generate-key
@@ -140,7 +137,7 @@ Extracting our binary from GnuPG is straight forward and can be done with the fo
   $ gpg --output pubkey.bin --export 5E0BE9CCE55D5494495E0A0CB52EF617C8114CBC
   ```
 
-  Parsing the resulting file requires going through [RFC4880bis](https://tools.ietf.org/html/draft-ietf-openpgp-rfc4880bis-06) which is rather long and not covered in the  scope for this tutorial.
+  Parsing the resulting file requires going through [RFC4880bis](https://tools.ietf.org/html/draft-ietf-openpgp-rfc4880bis-06) which is rather long and not in scope for this tutorial.
 
   We will use the function `bin2packet` which interprets PGP messages and allows for extracting our ECDSA key and signature. Source code of the later function can be found at [GitLab](https://gitlab.com/braneproject/pgpacket.jl).
 
@@ -158,7 +155,7 @@ Extracting our binary from GnuPG is straight forward and can be done with the fo
   f05314566c9bfc8d8cf463a7a01e7735245d588a60dd874f09a9636620abb314,
   6bda245d43cbbe019ab1ad74316d675dd858cdd776820969bcc21bbccbd3a661)
 
-  julia> pubkey = packet[1].body.point
+  julia> pubkey = packet.body.pubkey
   scep256k1 Point(𝑥,𝑦):
   f05314566c9bfc8d8cf463a7a01e7735245d588a60dd874f09a9636620abb314,
   6bda245d43cbbe019ab1ad74316d675dd858cdd776820969bcc21bbccbd3a661
@@ -167,8 +164,6 @@ Extracting our binary from GnuPG is straight forward and can be done with the fo
 4. From that public key, we can compute the corresponding bitcoin address using the `Bitcoin` package in Julia. We are here using `true` as second and third function arguments to generate a compressed address on testnet.
 
   ```julia
-  julia> using Bitcoin
-
   julia> address(pubkey, true, true)
   "moZ5AGrmGEFD4rCgSK2Vau46RjjsZpgmNo"
    ```
@@ -192,7 +187,7 @@ First send some bitcoin to your test address and use a block explorer to identif
   julia> target_address = b"mv4rnyY3Su5gjcDNzbMLKBQkBicCtHUtFB";
   julia> tx_outs = TxOut[];
   julia> h160 = base58checkdecode(target_address)[2:end];
-  julia> script_pubkey = p2pkh_script(h160);
+  julia> script_pubkey = Bitcoin.p2pkh_script(h160);
   julia> target_amount = 0.01;
   julia> target_satoshis = Int(target_amount*100000000);
   julia> push!(tx_outs, TxOut(target_satoshis, script_pubkey));
@@ -203,8 +198,8 @@ First send some bitcoin to your test address and use a block explorer to identif
   ```julia
   julia> change_address = b"moZ5AGrmGEFD4rCgSK2Vau46RjjsZpgmNo";
   julia> h160 = base58checkdecode(change_address)[2:end];
-  julia> script_pubkey = p2pkh_script(h160);
-  julia> prev_amount = txinvalue(tx_ins[1], true);
+  julia> script_pubkey = Bitcoin.p2pkh_script(h160);
+  julia> prev_amount = Bitcoin.txinvalue(tx_ins[1], true);
   julia> fee = 50000;
   julia> change_satoshis = prev_amount - target_satoshis - fee;
   julia> push!(tx_outs, TxOut(change_satoshis, script_pubkey));
@@ -249,11 +244,11 @@ First send some bitcoin to your test address and use a block explorer to identif
 
 1. We now have our unsigned bitcoin transaction from which we can compute `z`, and sign using our GPG private key.
   ```
-  julia> z = txsighash(tx_obj, input_index)
+  julia> z = txsighash(tx_obj, 0)
   99621552382283238930643867389539606415724582999531180113553721867524305282175
   ```
 
-2. Unfortunately OpenPGP signing algorithm implies [adding a trailer to `z` and hash that all together](https://tools.ietf.org/html/draft-ietf-openpgp-rfc4880bis-06#section-5.2.4). This will result in a totally different signature which prevents us from using our GnuPG signature at the moment. We will therefore export the private key from GnuPG and use it to sign the transaction with our Bitcoin package.
+2. Unfortunately OpenPGP signing algorithm implies [adding a trailer to `z` and hash that all together](https://tools.ietf.org/html/draft-ietf-openpgp-rfc4880bis-06#section-5.2.4). This will result in a totally different signature which prevents us from using a GnuPG signature at the moment. We will therefore export the private key from GnuPG and use it to sign the transaction with our Bitcoin package.
 
   ```shell
   $ gpg --export-secret-key --output privkey.bin 5E0BE9CCE55D5494495E0A0CB52EF617C8114CBC
@@ -281,7 +276,7 @@ First send some bitcoin to your test address and use a block explorer to identif
   6bda245d43cbbe019ab1ad74316d675dd858cdd776820969bcc21bbccbd3a661)
   ```
 
-4. Once in possession of the private key and `z` we can compute signature as follows, push it to the transaction which we can serialize and finally broadcast it.
+4. Once in possession of the private key and `z` we can compute signature as follows, push it to the transaction which we can serialize and finally broadcast.
 
   ```julia
   julia> sig = pksign(pk, z)
@@ -289,7 +284,7 @@ First send some bitcoin to your test address and use a block explorer to identif
   1413a5458e10a8d3419b9f534179a5367875ee390722b286612101ddbbdd1e4e,
   5d449bd818bafc5f25d0fcd17536b4554eb0245879585fe8fd24c13c906d6122
 
-  julia> txpushsignature(tx_obj, 0, z, sig, pubkey)
+  julia> Bitcoin.txpushsignature(tx_obj, 0, z, sig, pubkey)
   true
 
   julia> bytes2hex(txserialize(tx_obj))
@@ -300,11 +295,14 @@ First send some bitcoin to your test address and use a block explorer to identif
 
 ## Conclusion
 
-We have successfully derived a bitcoin address from a GPG public key, created a raw transaction and signed it with GPG private key. Unfortunately, we were not able to sign a bitcoin transaction directly with GPG due to its specific signing algorithm. Next step may require customising GnuPG code to create a specific signing algorithm that would work for bitcoin.
+We have sucessfully derived a bitcoin address from a GPG public key, created a raw transaction and signed it with its corresponding GPG private key. Unfortunately, we were not able to sign a bitcoin transaction directly with GPG due to its specific signing algorithm.
+Nevertheless, there is still hope to make this work with an OpenPGP card which specifications confirm that the salting and hashing of the input data is not perform on card.
 
 
 ## Reference
 
-* OpenPGP message format - [RFC4880bis](https://tools.ietf.org/html/draft-ietf-openpgp-rfc4880bis-06)
-* `bin2packet` function - [PGPPacket](https://gitlab.com/braneproject/pgpacket.jl)
-* Bitcoin package - [Bitcoin.jl](https://gitlab.com/braneproject/Bitcoin.jl)
+- OpenPGP message format - [RFC4880bis](https://tools.ietf.org/html/draft-ietf-openpgp-rfc4880bis-06)
+- OpenPGP card specification - [gnupg.org](https://gnupg.org/ftp/specs/OpenPGP-smart-card-application-3.3.pdf)
+- `bin2packet` function - [PGPPacket.jl](https://gitlab.com/braneproject/pgpacket.jl)
+- Bitcoin package - [Bitcoin.jl](https://gitlab.com/braneproject/Bitcoin.jl)
+- Using your hardware wallet with Bitcoin Core - [Advancing Bitcoin conference](https://vimeo.com/316634495)
