@@ -2,9 +2,9 @@
 
 ## Introduction
 
-This tutorial will guide you through experimenting with GnuPG and raw bitcoin transactions based on my own experience.
+In this tutorial, I will guide you through experimenting with GnuPG and raw bitcoin transactions based on my own experience.
 
-We will demonstrate how to derive a bitcoin address from a PGP public key, create a bitcoin transaction, sign it with corresponding private key and finally broadcast it to the network.
+We will demonstrate how to derive a bitcoin address from a PGP public key, create a bitcoin transaction, sign it with a corresponding private key and finally broadcast it to the network.
 
 ## Background
 
@@ -12,7 +12,7 @@ Following the [addition](https://git.gnupg.org/cgi-bin/gitweb.cgi?p=gnupg.git;a=
 
 We will be using GnuPG v2.2.12 and Julia v1.1.
 
-You will also need to add the `PGPacket` and `Bitcoin` package as follows.
+You will also need to add the `PGPacket` and `Bitcoin` packages as follows.
 
 Since `PGPacket` has not been released as an official package yet, we will need to add its repository manually. In Julia, invoke the package menu by typing `]` then add the pgppackget.jl.git repository, finally hit `backspace` to get back to the julia command line.
 
@@ -33,7 +33,7 @@ julia> using PGPacket, Bitcoin, Base58, ECC
 
 ### Generate a key pair
 
-We first have to create a key pair with GnuPG, using ECC and secp256k1 curve. We will simply run gpg with the `--full-generate-key` command and `--expert` option. Once we've invoked the GnuPG interactive menu, select options `10`, `9`, `0`, `y`, and finalise with user details at your will. To ease the experiment, do not enter setup passphrase for this key, it will allow us to export an unencrypted private key.
+We first have to create a key pair with GnuPG, using ECC and secp256k1 curve. We will simply run gpg with the `--full-generate-key` command and `--expert` option. Once we've invoked the GnuPG interactive menu, select options `10`, `9`, `0`, `y`, and finalise with user details at your own will. To ease the experiment, do not enter setup passphrase for this key, it will allow us to export an unencrypted private key.
 
 ```shell
 $ gpg --expert --full-generate-key
@@ -100,18 +100,18 @@ uid                      bitcoin pgp 001
 > GnuPG manages files at `~/.gnupg/` as a default location.
 > ```shell
 > $ tree ~/.gnupg/
-/home/simon/.gnupg/
-├── S.gpg-agent
-├── S.gpg-agent.browser
-├── S.gpg-agent.extra
-├── S.gpg-agent.ssh
-├── openpgp-revocs.d
-│   └── 5E0BE9CCE55D5494495E0A0CB52EF617C8114CBC.rev
-├── private-keys-v1.d
-│   └── 576C7094D11A13788F5CABFA0D6E9DAEBC3DC88B.key
-├── pubring.kbx
-├── pubring.kbx~
-└── trustdb.gpg
+> /home/simon/.gnupg/
+> ├── S.gpg-agent
+> ├── S.gpg-agent.browser
+> ├── S.gpg-agent.extra
+> ├── S.gpg-agent.ssh
+> ├── openpgp-revocs.d
+> │   └── 5E0BE9CCE55D5494495E0A0CB52EF617C8114CBC.rev
+> ├── private-keys-v1.d
+> │   └── 576C7094D11A13788F5CABFA0D6E9DAEBC3DC88B.key
+> ├── pubring.kbx
+> ├── pubring.kbx~
+> └── trustdb.gpg
 > ```
 
 ### Export Public Key
@@ -142,7 +142,7 @@ Extracting our binary from GnuPG is straight forward and can be done with the fo
   We will use the function `bin2packet` which interprets PGP messages and allows for extracting our ECDSA key and signature. Source code of the later function can be found at [GitLab](https://gitlab.com/braneproject/pgpacket.jl).
 
   > **Note**
-  > This is highly experimental and untested, use at your own risk!
+  > This is highly experimental and untested, use with caution.
 
 3. With the public key packet we are able to extract a point on an scep256k1 curve.
 
@@ -167,11 +167,11 @@ Extracting our binary from GnuPG is straight forward and can be done with the fo
   julia> address(pubkey, true, true)
   "moZ5AGrmGEFD4rCgSK2Vau46RjjsZpgmNo"
    ```
-We now have a bitcoin testnet address derived from GPG public key!
+We now have a bitcoin testnet address derived from our GPG public key!
 
 ### Construct transaction
 
-First send some bitcoin to your test address and use a block explorer to identify incoming transaction. In this case it is transaction [bf...47](https://live.blockcypher.com/btc-testnet/tx/bfd8209364e0fe275c30829391207d89fc1c480c6148caf37e5d612728f43247/) at index 0.
+First, send some bitcoin to your test address and use a block explorer to identify the input index for our transaction. In this case it is transaction [bf...47](https://live.blockcypher.com/btc-testnet/tx/bfd8209364e0fe275c30829391207d89fc1c480c6148caf37e5d612728f43247/) at index 0.
 
 1. Create a transaction input.
 
@@ -205,7 +205,7 @@ First send some bitcoin to your test address and use a block explorer to identif
   julia> push!(tx_outs, TxOut(change_satoshis, script_pubkey));
   ```
 > **Note**
-> We are using our original address for change as a convenience. For more information on why this is not advised, please see the [Address_reuse](https://en.bitcoin.it/wiki/Address_reuse) from the bitcoin wiki.
+> We are using our original address for change as a convenience. For more information on why this is not advised, please see [Address_reuse](https://en.bitcoin.it/wiki/Address_reuse) from the bitcoin wiki.
 
 4. Finally, we can construct our unsigned transaction with one input and two outputs.
 
@@ -248,7 +248,7 @@ First send some bitcoin to your test address and use a block explorer to identif
   99621552382283238930643867389539606415724582999531180113553721867524305282175
   ```
 
-2. Unfortunately OpenPGP signing algorithm implies [adding a trailer to `z` and hash that all together](https://tools.ietf.org/html/draft-ietf-openpgp-rfc4880bis-06#section-5.2.4). This will result in a totally different signature which prevents us from using a GnuPG signature at the moment. We will therefore export the private key from GnuPG and use it to sign the transaction with our Bitcoin package.
+2. Unfortunately the OpenPGP signing algorithm implies [adding a trailer to `z` and hash that all together](https://tools.ietf.org/html/draft-ietf-openpgp-rfc4880bis-06#section-5.2.4). This will result in a totally different signature which prevents us from using a GnuPG signature at the moment. We will therefore export the private key from GnuPG and use it to sign the transaction with our Bitcoin package.
 
   ```shell
   $ gpg --export-secret-key --output privkey.bin 5E0BE9CCE55D5494495E0A0CB52EF617C8114CBC
@@ -276,7 +276,7 @@ First send some bitcoin to your test address and use a block explorer to identif
   6bda245d43cbbe019ab1ad74316d675dd858cdd776820969bcc21bbccbd3a661)
   ```
 
-4. Once in possession of the private key and `z` we can compute signature as follows, push it to the transaction which we can serialize and finally broadcast.
+4. Once in possession of the private key and `z` we can compute the signature, then push it to the transaction which we can serialised and finally broadcast as follows.
 
   ```julia
   julia> sig = pksign(pk, z)
@@ -291,12 +291,12 @@ First send some bitcoin to your test address and use a block explorer to identif
   "01000000014732f42827615d7ef3ca48610c481cfc897d20919382305c27fee0649320d8bf000000006b4830450221009ac61e75c35cbb282e98bd08b3206e3436570be357f886bf85e8964db3681f670220286590134b392f4e7cb03431a5aefc519c91cdbbb50e27681da43e47d74b73ae012103f05314566c9bfc8d8cf463a7a01e7735245d588a60dd874f09a9636620abb314ffffffff0240420f00000000001976a9149f9a7abd600c0caa03983a77c8c3df8e062cb2fa88ace9cd1001000000001976a914582791ccb518faac5dd16290d7b65484ce416fa388ac00000000"
   ```
 
-5. See resulting transaction [1a...32](https://live.blockcypher.com/btc-testnet/tx/1a5b4504419857c369c753cb0b85068de39e55d4666cda57430c43fe1506f132/)
+5. See the resulting transaction at [1a...32](https://live.blockcypher.com/btc-testnet/tx/1a5b4504419857c369c753cb0b85068de39e55d4666cda57430c43fe1506f132/)
 
 ## Conclusion
 
 We have sucessfully derived a bitcoin address from a GPG public key, created a raw transaction and signed it with its corresponding GPG private key. Unfortunately, we were not able to sign a bitcoin transaction directly with GPG due to its specific signing algorithm.
-Nevertheless, there is still hope to make this work with an OpenPGP card which specifications confirm that the salting and hashing of the input data is not perform on card.
+Nevertheless, there is still hope to make this work with an OpenPGP card which specifications confirm that the salting and hashing of the input data is not performed on card.
 
 
 ## Reference
