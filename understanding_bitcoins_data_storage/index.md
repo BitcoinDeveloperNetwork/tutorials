@@ -23,7 +23,7 @@ Before we get started, let's have a look at the data directory of an existing ru
 
 ```shell
 gr0kchain@bitcoindev $ tree ~/.bitcoin/
-/Users/h4v0k/.bitcoin/
+/home/gr0kchain/.bitcoin/
 ├── banlist.dat
 ├── bitcoin.conf
 ├── blocks
@@ -434,7 +434,7 @@ To decode these values, using the obfuscation key.
   >
   ```
 
-We now have the decode version of our UTXO which can be decoded as per the instruction from [here](https://github.com/bitcoin/bitcoin/blob/d4a42334d447cad48fb3996cad0fd5c945b75571/src/coins.h#L21L69).
+We now have the decoded version of our UTXO which can be decoded as per the instruction from [here](https://github.com/bitcoin/bitcoin/blob/d4a42334d447cad48fb3996cad0fd5c945b75571/src/coins.h#L21L69).
 
 ```shell
 /** pruned version of CTransaction: only retains metadata and unspent transaction outputs
@@ -489,7 +489,6 @@ We now have the decode version of our UTXO which can be decoded as per the instr
  *  - height = 120891
  */
 ```
-
 
 ## Personally identifiable data [v0.8 and above]
 This section may be of use to you if you wish to send a friend the blockchain, avoiding them a hefty download.
