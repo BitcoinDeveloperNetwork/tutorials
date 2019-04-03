@@ -23,13 +23,13 @@ You will need access to a bitcoin node. We suggest executing against a node conf
 >      bitcoindevelopernetwork/bitcoind-regtest
 > ```
 
-You can also check for available nodes by following the details of our [Bitcoin network statistics](https://bitcoindev.network/bitcoin-network-statistics/) tutorial.
+You can also check for available nodes by following the details of our [Bitcoin network statistics](https://raw.githubusercontent.com/BitcoinDeveloperNetwork/tutorials/master/merkle_root/https://bitcoindev.network/bitcoin-network-statistics/) tutorial.
 
 ## Understanding hashes
 
 Before diving into merkle trees, let's look into a primitive required for their operation called hash functions, or trapdoor functions. These functions are easy to compute in one direction, yet difficult to compute in the opposite direction (finding its inverse) without special information, called the "trapdoor". Trapdoor functions are widely used in cryptography. A hash function is any function that can be used to map digital data of an arbitrary size to a fixed size with slight differences in input data producing very big differences in output data.
 
-Some of these hash functions include [md5](https://en.wikipedia.org/wiki/MD5), [sha1](https://en.wikipedia.org/wiki/SHA-1) and [sha256](https://en.wikipedia.org/wiki/SHA-2).
+Some of these hash functions include [md5](https://raw.githubusercontent.com/BitcoinDeveloperNetwork/tutorials/master/merkle_root/https://en.wikipedia.org/wiki/MD5), [sha1](https://raw.githubusercontent.com/BitcoinDeveloperNetwork/tutorials/master/merkle_root/https://en.wikipedia.org/wiki/SHA-1) and [sha256](https://raw.githubusercontent.com/BitcoinDeveloperNetwork/tutorials/master/merkle_root/https://en.wikipedia.org/wiki/SHA-2).
 
 ### Example of using sha256
 
@@ -42,19 +42,19 @@ a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e
 
 Here we are providing the into `Hello World` and piping it the the `opnessl` command with the digest flag of `sha256`. The output we receive here is the finger print of the input data `a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e`. Anyone using `sha256` on the same input data would result in the same hash. A slight change to the data results in a completely different hash.
 
-![](sha256-6.png)
+![](https://raw.githubusercontent.com/BitcoinDeveloperNetwork/tutorials/master/merkle_root/sha256-6.png)
 
 ```console
 gr0kchain@bitcoindev $ echo -en "Hello World." | openssl dgst -sha256
 f4bb1975bf1f81f76ce824f7536c1e101a8060a632a52289d530a6f600d52c92
 ```
-![](sha256-7.png)
+![](https://raw.githubusercontent.com/BitcoinDeveloperNetwork/tutorials/master/merkle_root/sha256-7.png)
 
 ## Some background on merkle trees
 
 In the previous example we had a brief look into how you can generate a unique finger print from any arbitrary input data. This comes in useful when we need to provide a cryptographic proof for a large amount of data. This data can be presented in what is called a merkle or hash tree. Merkle trees are a data structure from which you can derive the same hash as we had indicated before.
 
-![](merkle_tree.png)
+![](https://raw.githubusercontent.com/BitcoinDeveloperNetwork/tutorials/master/merkle_root/merkle_tree.png)
 
 A property of merkle trees is that any change in the leave node layer would result in a completely different merkle root hash. We can therefore use this data structure to verify the integrity of a set of data.
 
@@ -177,5 +177,5 @@ In this tutorial we had a look at hash functions, merkle trees and how to calcul
 
 ## Reference
 
-* [Reverse a hexadecimal number in bash](https://unix.stackexchange.com/questions/321860/reverse-a-hexadecimal-number-in-bash/321867)
-* [LC_ALL=C Linux meaning](https://www.programering.com/a/MDM3UzNwATQ.html)
+* [Reverse a hexadecimal number in bash](https://raw.githubusercontent.com/BitcoinDeveloperNetwork/tutorials/master/merkle_root/https://unix.stackexchange.com/questions/321860/reverse-a-hexadecimal-number-in-bash/321867)
+* [LC_ALL=C Linux meaning](https://raw.githubusercontent.com/BitcoinDeveloperNetwork/tutorials/master/merkle_root/https://www.programering.com/a/MDM3UzNwATQ.html)
